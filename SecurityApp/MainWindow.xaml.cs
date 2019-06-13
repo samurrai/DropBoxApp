@@ -28,7 +28,7 @@ namespace SecurityApp
             InitializeComponent();
         }
 
-        private void SignInButtonClick(object sender, RoutedEventArgs e)
+        private async void SignInButtonClick(object sender, RoutedEventArgs e)
         {
             var login = loginTextBox.Text;
             var password = passwordBox.Password;
@@ -38,18 +38,23 @@ namespace SecurityApp
                 MessageBox.Show("Заполните все поля");
                 return;
             }
+            signInButton.IsEnabled = false;
             using (var context = new SecurityContext())
             {
-                var user = context.Users.SingleOrDefault(searchingUser => searchingUser.Login == login);
+                var user = await GetUser(context, login);
                 if (user == null || !SecurityHasher.VerifyPassword(password, user.Password))
                 {
                     MessageBox.Show("Неверный логин или пароль");
                 }
-                else
-                {
-                    MessageBox.Show("Успешный вход");
-                }
             }
+            OpenDropBoxWindow();
+        }
+
+        private Task<User> GetUser(SecurityContext context, string login)
+        {
+            return Task.Run(() => {
+                return context.Users.SingleOrDefault(searchingUser => searchingUser.Login == login);
+            });
         }
 
         private void RegistrationButtonClick(object sender, RoutedEventArgs e)
@@ -61,9 +66,10 @@ namespace SecurityApp
             registrationButton.IsEnabled = false;
             loginTextBox.Text = "";
             passwordBox.Password = "";
+            Title = "Регистрация";
         }
 
-        private void SignUpButtonClick(object sender, RoutedEventArgs e)
+        private async void SignUpButtonClick(object sender, RoutedEventArgs e)
         {
             var login = loginTextBox.Text;
             var password = passwordBox.Password;
@@ -78,31 +84,32 @@ namespace SecurityApp
                 MessageBox.Show("Введите пароль");
                 return;
             }
+            signInButton.IsEnabled = false;
             using (var context = new SecurityContext())
             {
-                foreach (var user in context.Users)
+                var user = await GetUser(context, login);
+                if (user == null)
                 {
-                    if (user.Login == login)
+                    context.Users.Add(new User
                     {
-                        MessageBox.Show("Аккаунт с таким логином уже зарегистрирован");
-                        return;
-                    }
+                        Login = login,
+                        Password = SecurityHasher.HashPassword(password)
+                    });
+                    await context.SaveChangesAsync();
                 }
-                context.Users.Add(new User {
-                    Login = login,
-                    Password = SecurityHasher.HashPassword(password)
-                });
-                context.SaveChanges();
-                MessageBox.Show("Вы успешно зарегистированы");
-                loginTextBox.Text = "";
-                passwordBox.Password = "";
-                registrationButton.Visibility = Visibility.Visible;
-                registrationButton.IsEnabled = true;
-                registrationButton.Content = "Зарегистрироваться";
-                signInButton.Click -= SignUpButtonClick;
-                signInButton.Click += SignInButtonClick;
-                signInButton.Content = "Войти";
+                else
+                {
+                    MessageBox.Show("Аккаунт с таким логином уже зарегистрирован");
+                    signInButton.IsEnabled = true;
+                    return;
+                }
             }
+            OpenDropBoxWindow();
+        }
+        private void OpenDropBoxWindow()
+        {
+            new DropBoxWindow().Show();
+            Close();
         }
     }
 }

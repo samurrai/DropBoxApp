@@ -33,3 +33,9 @@ C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\bin\Debug\Mater
 C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\bin\Debug\MaterialDesignThemes.Wpf.pdb
 C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\bin\Debug\MaterialDesignThemes.Wpf.xml
 C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\obj\Debug\App.baml
+C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\obj\Debug\DropBoxWindow.g.cs
+C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\obj\Debug\DropBoxWindow.baml
+C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\bin\Debug\Dropbox.Api.dll
+C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\bin\Debug\Dropbox.Api.xml
+C:\Users\ШадикьянР\source\repos\SecurityApp\SecurityApp\bin\Debug\Newtonsoft.Json.xml
